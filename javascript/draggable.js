@@ -1,74 +1,4 @@
-var sprites = [];
-
-
-
-function setup() {
-	createCanvas(640, 360);
-
-	for (var i = 0; i < 10; i++) {
-		sprites.push(new Draggable(random(width), random(height)));
-	}
-}
-
-function draw() {
-	background(50, 50, 50);
-
-
-	_.invoke(sprites, "step");
-	_.invoke(sprites, "draw");
-}
-
-function mouseMoved() {
-	_.invoke(sprites, "mouseMoved");
-}
-
-function mouseDragged() {
-	_.invoke(sprites, "mouseDragged");
-}
-
-function mousePressed() {
-	_.invoke(sprites, "mousePressed");
-}
-
-function mouseReleased() {
-	_.invoke(sprites, "mouseReleased");
-}
-
-function mouseClicked() {
-	_.invoke(sprites, "mouseClicked");
-}
-
-
-var Sprite = function(x, y) {
-	this.x = x || 0;
-	this.y = y || 0;
-	this.localBounds = new Bounds(-10, -10, 20, 20);
-	this.color = color(200, 200, 200);
-};
-
-Sprite.prototype.step = function() {
-
-};
-
-Sprite.prototype.draw = function() {
-	fill(this.color);
-	ellipseMode(CORNER);
-	ellipse(this.x + this.localBounds.left, this.y + this.localBounds.top, this.localBounds.width, this.localBounds.height);
-};
-
-
-
-var Bounds = function(left, top, width, height) {
-	this.left = left || 0;
-	this.top = top || 0;
-	this.width = width || 0;
-	this.height = height || 0;
-};
-
-Bounds.prototype.contains = function(x, y) {
-	return (x > this.left && x < this.left + this.width && y > this.top && y < this.top + this.height);
-};
-
+import {UI} from "./ui.js";
 
 var DragStates = {
 	IDLE: "idle",
@@ -79,16 +9,13 @@ var DragStates = {
 Object.freeze(DragStates);
 
 
-var Draggable = function(x, y) {
-	Sprite.call(this, x, y);
+export function Draggable(bounds) {
+	UI.call(this, bounds);
 	this.dragState = DragStates.IDLE;
 	this.color = color(255, 200, 200);
+}
 
-
-
-};
-
-Draggable.prototype = Object.create(Sprite.prototype);
+Draggable.prototype = Object.create(UI.prototype);
 Draggable.prototype.constructor = Draggable;
 
 
