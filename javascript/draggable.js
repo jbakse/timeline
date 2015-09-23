@@ -23,36 +23,33 @@ Draggable.prototype.constructor = Draggable;
 Draggable.prototype.step = function() {
 
 	if (this.dragState === DragStates.IDLE) {
-		this.color = color(100, 0, 0);
+		this.color = color(0, 0, 255);
 	}
 	if (this.dragState === DragStates.HOVER) {
 		this.color = color(200, 0, 0);
 	}
 	if (this.dragState === DragStates.DOWN) {
-		this.color = color(100, 100, 0);
+		this.color = color(200, 200, 0);
 	}
 	if (this.dragState === DragStates.DRAG) {
-		this.color = color(200, 200, 0);
+		this.color = color(0, 200, 0);
 	}
 
 };
 
-Draggable.prototype.mouseMoved = function() {
-	var localMouseX = mouseX - this.x;
-	var localMouseY = mouseY - this.y;
+Draggable.prototype.mousemove = function() {
+	
 
-	if (this.dragState === DragStates.IDLE && this.localBounds.contains(localMouseX, localMouseY)) {
+	if (this.dragState === DragStates.IDLE && this.bounds.contains(mouseX, mouseY)) {
 		// mouseOver
 		this.dragState = DragStates.HOVER;
 	}
 
-	if (this.dragState === DragStates.HOVER && !this.localBounds.contains(localMouseX, localMouseY)) {
+	if (this.dragState === DragStates.HOVER && !this.bounds.contains(mouseX, mouseY)) {
 		// mouseOut
 		this.dragState = DragStates.IDLE;
 	}
-};
 
-Draggable.prototype.mouseDragged = function() {
 	if (this.dragState === DragStates.DOWN) {
 		// dragStart
 		this.dragState = DragStates.DRAG;
@@ -60,31 +57,23 @@ Draggable.prototype.mouseDragged = function() {
 
 	if (this.dragState === DragStates.DRAG) {
 		// drag
-		this.x = mouseX + this.dragInfo.offsetX;
-		this.y = mouseY + this.dragInfo.offsetY;
+		this.bounds.x = mouseX + this.dragInfo.offsetX;
+		this.bounds.y = mouseY + this.dragInfo.offsetY;
 	}
 };
 
-Draggable.prototype.mousePressed = function() {
-	var localMouseX = mouseX - this.x;
-	var localMouseY = mouseY - this.y;
-
-
+Draggable.prototype.mousedown = function() {
 	if (this.dragState === DragStates.HOVER) {
 		// mouseDown
 		this.dragState = DragStates.DOWN;
 		this.dragInfo = {
-			offsetX: -localMouseX,
-			offsetY: -localMouseY
+			offsetX: this.bounds.x - mouseX,
+			offsetY: this.bounds.y - mouseY
 		};
 	}
-
 };
 
-Draggable.prototype.mouseReleased = function() {
-
-	var localMouseX = mouseX - this.x;
-	var localMouseY = mouseY - this.y;
+Draggable.prototype.mouseup = function() {
 
 	if (this.dragState === DragStates.DOWN) {
 		// click
@@ -94,16 +83,10 @@ Draggable.prototype.mouseReleased = function() {
 		// endDrag
 	}
 
-	if (this.localBounds.contains(localMouseX, localMouseY)) {
+	if (this.bounds.contains(mouseX, mouseY)) {
 		this.dragState = DragStates.HOVER;
 	}else{
 		this.dragState = DragStates.IDLE;
 	}
 
-};
-
-Draggable.prototype.draw = function() {
-	fill(this.color);
-	ellipseMode(CORNER);
-	ellipse(this.x + this.localBounds.left, this.y + this.localBounds.top, this.localBounds.width, this.localBounds.height);
 };

@@ -1,13 +1,7 @@
 export function UI(bounds) {
 	this.bounds = bounds;
 	this.color = color(200, 200, 200);
-	window.addEventListener('mousedown', () => this.mousePressed());
 }
-
-UI.prototype.mousePressed = function() {
-	console.log("mouse pressed on " + this);
-	console.log(this.bounds);
-};
 
 UI.prototype.step = function() {
 
